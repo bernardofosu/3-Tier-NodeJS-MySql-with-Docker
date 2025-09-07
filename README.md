@@ -17,7 +17,6 @@ This is a full-stack application for managing users with a front-end built using
     - [User Management Features:](#user-management-features)
   - [License](#license)
     - [NOTE: This Application Should not be used for commercial purpose by anyone else other than DevOps Shack](#note-this-application-should-not-be-used-for-commercial-purpose-by-anyone-else-other-than-devops-shack)
-- [then: http://localhost:5000](#then-httplocalhost5000)
 
 ## Features
 
@@ -198,5 +197,53 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ### NOTE: This Application Should not be used for commercial purpose by anyone else other than DevOps Shack
 
+
+```sh
+docker compose down
 docker compose up -d --build
-# then: http://localhost:5000
+docker logs -f app
+
+then: http://localhost:5000
+```
+
+Interactive way
+```sh
+# 1) Get a shell inside the MySQL container
+docker exec -it mysql /bin/bash
+
+# 2) Start the MySQL client (enter the root password when prompted: password)
+mysql -u root -p
+```
+
+Inside the MySQL prompt:
+```sh
+SHOW DATABASES;
+USE test_db;
+SHOW TABLES;
+SELECT * FROM users;
+```
+
+One-liners from the host (no shell inside)
+```sh
+# Show databases
+docker exec -it mysql mysql -uroot -ppassword -e "SHOW DATABASES;"
+
+# Switch DB and list tables
+docker exec -it mysql mysql -uroot -ppassword -e "USE test_db; SHOW TABLES;"
+
+# Query rows
+docker exec -it mysql mysql -uroot -ppassword -e "USE test_db; SELECT * FROM users;"
+```
+
+(If you ever need to create the table)
+```sh
+docker exec -it mysql mysql -uroot -ppassword -e "
+CREATE DATABASE IF NOT EXISTS test_db;
+USE test_db;
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  role VARCHAR(50) NOT NULL
+);"
+```
