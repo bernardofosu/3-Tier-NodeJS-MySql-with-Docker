@@ -201,10 +201,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ```sh
 docker compose down
 docker compose up -d --build
-docker logs -f app
+
+docker logs -f app # very important
 
 then: http://localhost:5000
 ```
+-f means follow.
+
+docker logs -f app streams the container’s logs in real time (like tail -f). It keeps the terminal attached and prints new lines as the app writes to stdout/stderr until you stop it (Ctrl+C).
 
 Interactive way
 ```sh
@@ -246,4 +250,27 @@ CREATE TABLE IF NOT EXISTS users (
   email VARCHAR(100) NOT NULL,
   role VARCHAR(50) NOT NULL
 );"
+```
+
+Size of each running container’s writable layer
+
+(How much the container has written on top of the image)
+```sh
+docker ps -s
+# or
+docker container ls -s
+```
+
+(Optional) Reclaim space — be careful!
+```sh
+docker container prune        # remove stopped containers
+docker image prune -a         # remove unused images
+docker volume prune           # remove unused volumes
+docker system prune -a --volumes
+```
+
+Tip: For your stack, check quickly:
+```sh
+docker ps -s                   # writable size of app and mysql
+docker system df -v            # see mysql_data volume size
 ```
